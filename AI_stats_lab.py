@@ -166,7 +166,7 @@ def threshold_metrics_analysis(y_true, scores, thresholds):
     """
     results = []
     for x in thresholds:
-        predictions = apply_thresholds(scores, x)
+        predictions = apply_threshold(scores, x)
         metrics = classification_metrics(y_true, predictions)
         result = {
             "threshold": threshold,
