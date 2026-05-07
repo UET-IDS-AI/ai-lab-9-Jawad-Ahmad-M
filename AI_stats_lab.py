@@ -258,7 +258,7 @@ def evaluate_classifier(model, X_test, y_test, threshold=0.5):
         - Combine the counts and metrics into one dictionary.
     """
     scores = model.predict_proba(X_test)[:, 1]
-    predictions = scores.apply_threshold(scores, threshold)
+    predictions = apply_threshold(scores, threshold)
     TP, FP, FN, TN = confusion_matrix_counts(y_test, predictions)
     metrics = classification_metrics(y_test, predictions)
     return {
