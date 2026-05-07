@@ -90,7 +90,7 @@ def classification_metrics(y_true, y_pred):
         - Return a dictionary, not a tuple or list.
     """
     
-    TP, FP, FN, TN = confusion_matrix_count(y_true, y_pred)
+    TP, FP, FN, TN = confusion_matrix_counts(y_true, y_pred)
     
     # recall    = (TP / (TP + FN) if (TP + FN) != 0 else 0.0)
     # fallout   = (FP / (FP + TN) if (FP + TN) != 0 else 0.0)
