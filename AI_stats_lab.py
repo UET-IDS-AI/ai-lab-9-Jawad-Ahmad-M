@@ -216,7 +216,7 @@ def train_two_classifiers(X_train, y_train):
     """
 
     LR_model = LogisticRegression(max_iter = 1000)
-    DT_model = Decision_Classifier(random_state = 0)
+    DT_model = DecisionTreeClassifier(random_state = 0)
 
     LR_model.fit(X_train, y_train)
     DT_model.fit(X_train, y_train)
