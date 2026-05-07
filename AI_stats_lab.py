@@ -54,7 +54,15 @@ def confusion_matrix_counts(y_true, y_pred):
         - Return the values in this exact order:
               (TP, FP, FN, TN)
     """
-    pass
+    y_true = np.array(y_true)
+    y_pred = np.array(y_pred)
+
+    TP = sum( (y_true == 1) & (y_pred == 1) )
+    FP = sum( (y_true == 0) & (y_pred == 1) )
+    FN = sum( (y_true == 1) & (y_pred == 0) )
+    TN = sum( (y_true == 0) & (y_pred == 0) )
+
+    return (TP,FP,FN,TN)
 
 
 def classification_metrics(y_true, y_pred):
@@ -81,9 +89,22 @@ def classification_metrics(y_true, y_pred):
         - Then compute each metric from TP, FP, FN, and TN.
         - Return a dictionary, not a tuple or list.
     """
-    pass
+    
+    TP, FP, FN, TN = confusion_matrix_count(y_true, y_pred)
+    
+    # recall    = (TP / (TP + FN) if (TP + FN) != 0 else 0.0)
+    # fallout   = (FP / (FP + TN) if (FP + TN) != 0 else 0.0)
+    # precision = (TP / (TP + FP) if (TP + FP) != 0 else 0.0)
+    # accuracy  = ( (TP + TN) / (TP + FP + FN + TN) if (TP + FP + FN + TN) != 0 else 0.0 )
+    
+    return { 
+            "recall": (TP / (TP + FN) if (TP + FN) != 0 else 0.0) ,
+            "fallout": (FP / (FP + TN) if (FP + TN) != 0 else 0.0) ,
+            "precision": (TP / (TP + FP) if (TP + FP) != 0 else 0.0) ,
+            "accuracy" : ( (TP + TN) / (TP + FP + FN + TN) if (TP + FP + FN + TN) != 0 else 0.0 ) 
+           }
 
-
+    
 def apply_threshold(scores, threshold):
     """
     Convert prediction scores into binary predictions.
@@ -103,7 +124,8 @@ def apply_threshold(scores, threshold):
               score >= threshold  -> 1
               score < threshold   -> 0
     """
-    pass
+    scores = np.array(scores)
+    return np.where(scores >= threshold, 1, 0)
 
 
 def threshold_metrics_analysis(y_true, scores, thresholds):
@@ -142,7 +164,20 @@ def threshold_metrics_analysis(y_true, scores, thresholds):
         Higher threshold usually predicts fewer positives.
         This usually decreases fallout but may also decrease recall.
     """
-    pass
+    results = []
+    for x in thresholds:
+        predictions = apply_thresholds(scores, x)
+        metrics = classification_metrics(y_true, predictions)
+        result = {
+            "threshold": threshold,
+            "recall": metrics["recall"],
+            "fallout": metrics["fallout"],
+            "precision": metrics["precision"],
+            "accuracy": metrics["accuracy"]
+        }
+        results.append(result)
+
+    return results
 
 
 # ============================================================
