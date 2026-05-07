@@ -214,8 +214,15 @@ def train_two_classifiers(X_train, y_train):
         - Fit both models using model.fit(X_train, y_train).
         - Return the trained models in a dictionary.
     """
-    pass
 
+    LR_model = LogisticRegression(max_iter = 1000)
+    DT_model = Decision_Classifier(random_state = 0)
+
+    LR_model.fit(X_train, y_train)
+    DT_model.fit(X_train, y_train)
+    
+    return { "logistic_regression" : LR_model,
+             "decision_tree" : DT_model }
 
 def evaluate_classifier(model, X_test, y_test, threshold=0.5):
     """
@@ -250,7 +257,20 @@ def evaluate_classifier(model, X_test, y_test, threshold=0.5):
         - Then call classification_metrics.
         - Combine the counts and metrics into one dictionary.
     """
-    pass
+    scores = model.predict_proba(X_test)[:, 1]
+    predictions = scores.apply_threshold(scores, threshold)
+    TP, FP, FN, TN = confusion_matrix_counts(y_test, predictions)
+    metrics = classification_metrics(y_test, predictions)
+    return {
+        "TP": TP,
+        "FP": FP,
+        "FN": FN,
+        "TN": TN,
+        "recall": metrics["recall"],
+        "fallout": metrics["fallout"],
+        "precision": metrics["precision"],
+        "accuracy": metrics["accuracy"]
+    }
 
 
 def compare_classifiers(X_train, y_train, X_test, y_test, threshold=0.5):
@@ -273,7 +293,29 @@ def compare_classifiers(X_train, y_train, X_test, y_test, threshold=0.5):
         - Then evaluate both classifiers using evaluate_classifier.
         - Return a dictionary with results for both models.
     """
-    pass
+    models = train_two_classifiers(
+        X_train,
+        y_train
+    )
+
+    logistic_results = evaluate_classifier(
+        models["logistic_regression"],
+        X_test,
+        y_test,
+        threshold
+    )
+
+    decision_tree_results = evaluate_classifier(
+        models["decision_tree"],
+        X_test,
+        y_test,
+        threshold
+    )
+
+    return {
+        "logistic_regression": logistic_results,
+        "decision_tree": decision_tree_results
+    }
 
 
 if __name__ == "__main__":
