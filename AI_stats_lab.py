@@ -169,7 +169,7 @@ def threshold_metrics_analysis(y_true, scores, thresholds):
         predictions = apply_threshold(scores, x)
         metrics = classification_metrics(y_true, predictions)
         result = {
-            "threshold": threshold,
+            "threshold": x,
             "recall": metrics["recall"],
             "fallout": metrics["fallout"],
             "precision": metrics["precision"],
